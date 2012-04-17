@@ -19,10 +19,13 @@ written in Python.
 
 
 Explanation:
+
   - doc_id: is the prefix of a doc file name (e.g. doc_id of 
     "camera-002-002.txt" is "camera-002-002").
+
   - rel_type: is the type of stringSlotMention->mentionSlot or 
     complexSlotMention->mentionSlot that you want to extract.
+
   - --data-path: is the path to the fold which contains JDPA data. This folder
     should contain sub-folders [camera], [car], [doc].
   
