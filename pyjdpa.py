@@ -116,6 +116,12 @@ def main(options, args):
     elif options.slot_mention == "string":
         titles = ["arg0", "rel", "value", "arg0_start", "arg0_end"]
 
+    sents = None
+    if options.context:
+        import nltk
+        sent_tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+        sents = sent_tokenizer.span_tokenize(doc.text)
+
     if not options.no_header:
         print "\t".join(titles)
     for arg0 in doc.annotations.values():
@@ -125,19 +131,28 @@ def main(options, args):
                 for value in rel.values:
                     if options.slot_mention=="complex":
                         arg1 = doc.annotations[value]
-                        print "\t".join([doc.text[arg0.start:arg0.end],
-                                         rel_type,
-                                         doc.text[arg1.start:arg1.end], 
-                                         str(arg0.start),
-                                         str(arg0.end),
-                                         str(arg1.start),
-                                         str(arg1.end)])
+                        result = [doc.text[arg0.start:arg0.end],
+                                  rel_type,
+                                  doc.text[arg1.start:arg1.end], 
+                                  str(arg0.start),
+                                  str(arg0.end),
+                                  str(arg1.start),
+                                  str(arg1.end)]
                     else:
-                        print "\t".join([doc.text[arg0.start:arg0.end],
-                                         rel_type,
-                                         value,
-                                         str(arg0.start),
-                                         str(arg0.end)])
+                        result =[doc.text[arg0.start:arg0.end],
+                                 rel_type,
+                                 value,
+                                 str(arg0.start),
+                                 str(arg0.end)]
+                    if options.context:
+                        result.append(
+                            doc.text[slice(
+                                *[s for s in sents if arg0.start >= s[0] and\
+                                                     arg0.end <= s[1]][0])
+                            ]
+                        )
+                    print "\t".join(result)
+                                
 
     return 0
 
@@ -158,5 +173,9 @@ if __name__ == "__main__":
                 default="complex", action="store",
                 help="Slot mention type: 'string' (stringSlotMention) or"
                      "'complex' (complexSlotMention). Default is 'complex'. ")
+    parser.add_option("-c", "--context", dest="context",
+                default=False, action="store_true",
+                help="Display sentence containing arg0. Require ntlk and "
+                     "tokenizers/punkt/english.pickle installed.")
     options, args = parser.parse_args()
     sys.exit(main(options, args))
