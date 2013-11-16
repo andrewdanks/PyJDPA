@@ -11,6 +11,8 @@ from termcolor import colored
 
 log = logging.getLogger(__name__)
 
+SEPARATOR = "\t"
+
 class InvalidJDPADocIdError(Exception):
     pass
 
@@ -105,7 +107,7 @@ class JDPAParser(object):
 
 def main(options, args):
     if len(args) != 2:
-        print "Please run with --help for usage information."
+        print("Please run with --help for usage information.")
         return 1
 
     doc_id, rel_type = args
@@ -123,7 +125,7 @@ def main(options, args):
         sents = sent_tokenizer.span_tokenize(doc.text)
 
     if not options.no_header:
-        print "\t".join(titles)
+        print(SEPARATOR.join(titles))
     for arg0 in doc.annotations.values():
         for rel_id in arg0.slot_mention_ids:
             rel = doc.slot_mentions[rel_id]
@@ -151,7 +153,7 @@ def main(options, args):
                                                      arg0.end <= s[1]][0])
                             ]
                         )
-                    print "\t".join(result)
+                    print(SEPARATOR.join(result))))
                                 
 
     return 0

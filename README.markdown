@@ -2,7 +2,7 @@ PyJDPA
 ======
 
 PyJDPA is a snippets used to parse [JDPA Sentiment
-Corpus](https://verbs.colorado.edu/jdpacorpus/) to TSV format. The snippet is
+Corpus](https://verbs.colorado.edu/jdpacorpus/) to TSV format (or some other separated value). The snippet is
 written in Python.
 
     Usage: pyjdpa.py [options] doc_id rel_type. E.g: pyjdpa.py camera-002-002 target
